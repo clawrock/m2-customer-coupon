@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="apply_to_shipping_methods">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Apply free shipping to</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="sortOrder" xsi:type="number">31</item>
+            </item>
+        </argument>
+        <field name="shipping_methods">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">ClawRock\CustomerCoupon\Model\Config\Source\ShippingMethods</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Shipping methods</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="source" xsi:type="string">sales_rule</item>
+                    <item name="dataScope" xsi:type="string">apply_to_shipping_methods</item>
+                    <item name="notice" xsi:type="string">To make this option works, you have to select 'Free shipping - for shipment with matching items' in Actions tab.</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="rule_information">
+        <field name="coupon_type">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">ClawRock_CustomerCoupon/js/form/element/coupon-type</item>
+                </item>
+            </argument>
+        </field>
+        <field name="use_auto_generation">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">ClawRock_CustomerCoupon/js/form/element/checkbox</item>
+                </item>
+            </argument>
+        </field>
+        <field name="customer_coupon">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Coupon assigned to customer</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sales_rule</item>
+                    <item name="dataScope" xsi:type="string">coupon_customer_id</item>
+                    <item name="sortOrder" xsi:type="number">8</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\SalesRule\Api\Data\RuleInterface">
+        <attribute code="apply_to_shipping_methods" type="string" />
+    </extension_attributes>
+    <extension_attributes for="Magento\SalesRule\Api\Data\CouponInterface">
+        <attribute code="coupon_customer_id" type="string" />
+    </extension_attributes>
+</config>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
+    <body>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="customer-account-navigation-delimiter"
+                   template="ClawRock_CustomerCoupon::account/navigation-delimeter.phtml">
+                <arguments>
+                    <argument name="sortOrder" xsi:type="number">30</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-my-coupons--link">
+                <arguments>
+                    <argument name="path" xsi:type="string">customer/account/coupons</argument>
+                    <argument name="label" xsi:type="string" translate="true">My Coupons</argument>
+                    <argument name="sortOrder" xsi:type="number">20</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

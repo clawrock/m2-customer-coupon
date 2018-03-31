@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="salesrule_rule_load_after">
+        <observer name="ClawRock_CustomerCoupon::salesrule_load_after"
+                  instance="ClawRock\CustomerCoupon\Observer\RuleAfterLoadObserver" />
+    </event>
+    <event name="salesrule_rule_save_after">
+        <observer name="ClawRock_CustomerCoupon::salesrule_save_after"
+                  instance="ClawRock\CustomerCoupon\Observer\RuleSaveAfterObserver" />
+    </event>
+    <event name="salesrule_rule_save_before">
+        <observer name="ClawRock_CustomerCoupon::salesrule_save_before"
+                  instance="ClawRock\CustomerCoupon\Observer\RuleSaveBeforeObserver" />
+    </event>
+</config>

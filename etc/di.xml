@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Shipping\Model\Shipping">
+        <plugin name="ClawRock_CustomerCoupon::shipping"
+                type="ClawRock\CustomerCoupon\Plugin\Model\ShippingPlugin" />
+    </type>
+    <type name="Magento\SalesRule\Model\Utility">
+        <plugin name="ClawRock_CustomerCoupon::salesrule_utility"
+                type="ClawRock\CustomerCoupon\Plugin\Model\UtilityPlugin" />
+    </type>
+    <preference for="Magento\OfflineShipping\Model\SalesRule\Calculator"
+                type="ClawRock\CustomerCoupon\Model\SalesRule\Calculator" />
+    <type name="Magento\SalesRule\Api\CouponRepositoryInterface">
+        <plugin name="ClawRock_CustomerCoupon::coupon"
+                type="ClawRock\CustomerCoupon\Plugin\Model\CouponRepositoryPlugin" />
+    </type>
+    <type name="Magento\SalesRule\Api\RuleRepositoryInterface">
+        <plugin name="ClawRock_CustomerCoupon::rule"
+                type="ClawRock\CustomerCoupon\Plugin\Model\RuleRepositoryPlugin" />
+    </type>
+</config>

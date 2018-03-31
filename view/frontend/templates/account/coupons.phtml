@@ -1,0 +1,43 @@
+<?php $coupons = $block->getCustomerCoupons(); ?>
+<?php if ($coupons && !empty($coupons)) : ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Orders') ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Coupon code') ?></th>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Name') ?></th>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Description') ?></th>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Usage limit') ?></th>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Times used') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($coupons as $coupon) : ?>
+                    <tr>
+                        <td class="col id">
+                            <?php echo $block->escapeHtml($coupon->getCode()) ?>
+                        </td>
+                        <td class="col id">
+                            <?php echo $block->escapeHtml($coupon->getName()) ?>
+                        </td>
+                        <td class="col id">
+                            <?php echo $block->escapeHtml($coupon->getDescription()) ?>
+                        </td>
+                        <td class="col id">
+                            <?php echo $block->escapeHtml($coupon->getUsageLimit()) ?>
+                        </td>
+                        <td class="col id">
+                            <?php echo $block->escapeHtml($coupon->getTimesUsed()) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()) : ?>
+        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else : ?>
+    <div class="message info empty"><span><?php echo $block->escapeHtml(__($block->getCustomMessage())) ?></span></div>
+<?php endif ?>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <referenceBlock name="adminhtml.promo.quote.grid.columnSet.coupon_code">
+                <arguments>
+                    <argument name="filter_index" xsi:type="string">rule_coupons.code</argument>
+                    <argument name="filter_condition_callback" xsi:type="array">
+                        <item name="0" xsi:type="object">ClawRock\CustomerCoupon\Model\Rule\Quote\CouponFilter</item>
+                        <item name="1" xsi:type="string">filterSpecialCouponCode</item>
+                    </argument>
+                </arguments>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

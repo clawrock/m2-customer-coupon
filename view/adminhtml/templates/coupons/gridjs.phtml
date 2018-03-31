@@ -1,0 +1,57 @@
+<script>
+require([
+    'jquery',
+    'Magento_Ui/js/modal/alert',
+    'prototype'
+], function(jQuery, alert) {
+
+function updateCoupon(couponId, updateUrl, remove) {
+    event.stopPropagation();
+    var input = jQuery(event.target).closest('.col-clawrock-customer-coupon').find('.input-text');
+    var message = jQuery(event.target).closest('.clawrock-customer-coupon').find('.clawrock-coupon-customer-message');
+    var params = {
+        couponId: couponId,
+        customerEmail: input.val(),
+        remove: remove
+    }
+    new Ajax.Request(updateUrl, {
+        parameters: params,
+        method :'post',
+        onComplete : function (transport, param){
+            var response = false;
+            if (transport && transport.responseText) {
+                try {
+                    response = JSON.parse(transport.responseText);
+                } catch (e) {
+                    console.warn('An error occured while parsing response');
+                }
+            }
+            if (response) {
+                if (response.error) {
+                    showMessage(message, response.message, 'error');
+                    return;
+                }
+                showMessage(message, response.message, 'success');
+                if (remove) {
+                    input.val('');
+                }
+            }
+        }
+    });
+}
+function showMessage(element, message, type) {
+    element.html(message).addClass(type).fadeIn();
+    hideMessage(element);
+}
+
+function hideMessage(element) {
+    setTimeout(function() {
+        element.fadeOut(500, function() {
+            element.removeClass('error success');
+        });
+    }, 1000);
+}
+
+window.updateCoupon = updateCoupon;
+});
+</script>

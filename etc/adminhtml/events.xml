@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="salesrule_rule_load_after">
+        <observer name="ClawRock_CustomerCoupon::admin_salesrule_rule_load_after"
+                  instance="ClawRock\CustomerCoupon\Observer\AdminRuleAfterLoadObserver" />
+    </event>
+</config>

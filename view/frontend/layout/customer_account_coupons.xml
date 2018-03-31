@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">My Coupons</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="ClawRock\CustomerCoupon\Block\Account\Coupon"
+                   cacheable="false"
+                   name="customer_account_coupons"
+                   as="customer_coupons_info"
+                   template="ClawRock_CustomerCoupon::account/coupons.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

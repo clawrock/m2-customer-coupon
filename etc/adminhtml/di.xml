@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\SalesRule\Model\Rule\Metadata\ValueProvider">
+        <plugin name="ClawRock_CustomerCoupon::admin_sales_rules_filedset_settings"
+                type="ClawRock\CustomerCoupon\Plugin\Model\Rule\Metadata\ValueProviderPlugin" />
+    </type>
+    <type name="Magento\SalesRule\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Grid">
+        <plugin name="ClawRock_CustomerCoupon::admin_sales_rules_coupons_grid"
+                type="ClawRock\CustomerCoupon\Plugin\Block\SalesRule\CouponsGridPlugin" />
+    </type>
+    <preference for="Magento\SalesRule\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Grid"
+                type="ClawRock\CustomerCoupon\Block\Adminhtml\SalesRule\Coupons\Grid" />
+</config>
