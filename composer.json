@@ -2,7 +2,7 @@
     "name": "clawrock/m2-customer-coupon",
     "description": "Module provides enhancements to sales rules.",
     "type": "magento2-module",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "require": {
         "magento/framework": ">=100.1",
         "magento/zendframework1": "^1.12",
