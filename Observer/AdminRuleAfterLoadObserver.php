@@ -2,6 +2,7 @@
 
 namespace ClawRock\CustomerCoupon\Observer;
 
+use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 class AdminRuleAfterLoadObserver implements ObserverInterface
@@ -12,28 +13,31 @@ class AdminRuleAfterLoadObserver implements ObserverInterface
     protected $couponFactory;
 
     /**
-     * @var \Magento\Customer\Model\CustomerFactory
+     * @var \ClawRock\CustomerCoupon\Helper\Coupon
      */
-    protected $customerFactory;
+    protected $couponHelper;
 
     public function __construct(
-        \Magento\SalesRule\Model\CouponFactory $couponFactory,
-        \Magento\Customer\Model\CustomerFactory $customerFactory
+        \ClawRock\CustomerCoupon\Helper\Coupon $couponHelper
     ) {
-        $this->couponFactory = $couponFactory;
-        $this->customerFactory = $customerFactory;
+        $this->couponHelper = $couponHelper;
     }
 
      /**
       * @param \Magento\Framework\Event\Observer $observer
       * @return void
       */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         $rule = $observer->getRule();
-        $coupon = $this->couponFactory->create()->loadByCode($rule->getCouponCode());
-        $customer = $this->customerFactory->create()->load($coupon->getCouponCustomerId());
 
-        $rule->setCouponCustomerId($customer->getEmail());
+        try {
+            $coupon = $this->couponHelper->loadCouponByCode($rule->getCouponCode());
+            $customerEmail = $this->couponHelper->getCustomerEmail($coupon->getCouponCustomerId());
+        } catch (\Exception $e) {
+            $customerEmail = '';
+        }
+
+        $rule->setCouponCustomerId($customerEmail);
     }
 }

@@ -3,6 +3,7 @@
 namespace ClawRock\CustomerCoupon\Model\SalesRule;
 
 use Magento\OfflineShipping\Model\SalesRule\Rule;
+use Magento\Quote\Model\Quote\Item\AbstractItem;
 
 class Calculator extends \Magento\OfflineShipping\Model\SalesRule\Calculator
 {
@@ -63,7 +64,7 @@ class Calculator extends \Magento\OfflineShipping\Model\SalesRule\Calculator
      * @param  \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return $this
      */
-    public function processFreeShipping(\Magento\Quote\Model\Quote\Item\AbstractItem $item)
+    public function processFreeShipping(AbstractItem $item)
     {
         $address = $item->getAddress();
         $item->setFreeShipping(false);

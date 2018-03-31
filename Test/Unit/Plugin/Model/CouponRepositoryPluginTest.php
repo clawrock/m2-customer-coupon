@@ -5,6 +5,8 @@ namespace ClawRock\CustomerCoupon\Test\Unit\Plugin\Model;
 use ClawRock\CustomerCoupon\Helper\Coupon as CouponHelper;
 use ClawRock\CustomerCoupon\Plugin\Model\CouponRepositoryPlugin;
 use Magento\Framework\Api\SearchResults;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
 use Magento\SalesRule\Api\CouponRepositoryInterface;
 use Magento\SalesRule\Api\Data\CouponExtension;
 use Magento\SalesRule\Api\Data\CouponExtensionFactory;
@@ -133,6 +135,33 @@ class CouponRepositoryPluginTest extends TestCase
         );
 
         $this->assertInstanceOf(CouponInterface::class, $result);
+    }
+
+    public function testAfterGetByIdWillThrowException()
+    {
+        $this->couponExtensionFactory->expects($this->once())
+                                   ->method("create")
+                                   ->willReturn($this->couponExtension);
+
+        $this->couponExtension->expects($this->once())
+                              ->method('setCouponCustomerId')
+                              ->with('')
+                              ->willReturnSelf();
+
+        $this->entity->setCouponCustomerId($this->couponCustomerId);
+
+        $this->couponHelper->expects($this->once())
+                           ->method('getCustomerEmail')
+                           ->willThrowException(new LocalizedException(new Phrase("Customer doesn't exists.")));
+
+        $this->entity->expects($this->once())
+                     ->method('setExtensionAttributes')
+                     ->with($this->couponExtension);
+
+        $result = $this->plugin->afterGetById(
+            $this->subject,
+            $this->entity
+        );
     }
 
     public function testAfterGetList()

@@ -2,8 +2,11 @@
 
 namespace ClawRock\CustomerCoupon\Plugin\Model;
 
+use Magento\Framework\Api\SearchResults;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Phrase;
+use Magento\SalesRule\Api\CouponRepositoryInterface;
+use Magento\SalesRule\Api\Data\CouponInterface;
 
 class CouponRepositoryPlugin
 {
@@ -35,8 +38,8 @@ class CouponRepositoryPlugin
      * @return \Magento\SalesRule\Model\Coupon
      */
     public function afterGetById(
-        \Magento\SalesRule\Api\CouponRepositoryInterface $subject,
-        \Magento\SalesRule\Api\Data\CouponInterface $entity
+        CouponRepositoryInterface $subject,
+        CouponInterface $entity
     ) {
         $this->addCustomerToCoupon($entity);
 
@@ -49,8 +52,8 @@ class CouponRepositoryPlugin
      * @return \Magento\Framework\Api\SearchResults
      */
     public function afterGetList(
-        \Magento\SalesRule\Api\CouponRepositoryInterface $subject,
-        \Magento\Framework\Api\SearchResults $searchResult
+        CouponRepositoryInterface $subject,
+        SearchResults $searchResult
     ) {
         foreach ($searchResult->getItems() as $coupon) {
             $this->addCustomerToCoupon($coupon);
@@ -67,9 +70,9 @@ class CouponRepositoryPlugin
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function aroundSave(
-        \Magento\SalesRule\Api\CouponRepositoryInterface $subject,
+        CouponRepositoryInterface $subject,
         \Closure $proceed,
-        \Magento\SalesRule\Api\Data\CouponInterface $entity
+        CouponInterface $entity
     ) {
         $extensionAttributes = $entity->getExtensionAttributes();
         if (null !== $extensionAttributes &&
@@ -96,8 +99,9 @@ class CouponRepositoryPlugin
     /**
      * @param \Magento\SalesRule\Api\Data\CouponInterface $coupon
      * @return this
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function addCustomerToCoupon(\Magento\SalesRule\Api\Data\CouponInterface $coupon)
+    protected function addCustomerToCoupon(CouponInterface $coupon)
     {
         $extensionAttributes = $coupon->getExtensionAttributes();
         if ($extensionAttributes == null) {
@@ -105,7 +109,11 @@ class CouponRepositoryPlugin
         }
 
         if ($customerId = $coupon->getCouponCustomerId()) {
-            $customerEmail = $this->couponHelper->getCustomerEmail($customerId);
+            try {
+                $customerEmail = $this->couponHelper->getCustomerEmail($customerId);
+            } catch (\Exception $e) {
+                $customerEmail = '';
+            }
             $extensionAttributes->setCouponCustomerId($customerEmail);
             $coupon->setExtensionAttributes($extensionAttributes);
         }

@@ -5,6 +5,7 @@ namespace ClawRock\CustomerCoupon\Test\Unit\Plugin\Model;
 use ClawRock\CustomerCoupon\Helper\Coupon;
 use ClawRock\CustomerCoupon\Plugin\Model\RuleRepositoryPlugin;
 use Magento\Framework\Api\SearchResults;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\SalesRule\Api\Data\RuleExtension;
 use Magento\SalesRule\Api\Data\RuleExtensionFactory;
 use Magento\SalesRule\Api\Data\RuleInterface;
@@ -144,6 +145,36 @@ class RuleRepositoryPluginTest extends TestCase
 
         $this->assertInstanceOf(RuleInterface::class, $result);
     }
+
+    public function testAfterGetByIdWillThrowException()
+    {
+        $this->ruleExtensionFactory->expects($this->once())
+                                   ->method("create")
+                                   ->willReturn($this->ruleExtension);
+
+        $this->toModelConverter->expects($this->once())
+                               ->method('toModel')
+                               ->with($this->entity)
+                               ->willThrowException(new NoSuchEntityException());
+
+        $this->rule->setApplyToShippingMethods($this->shippingMethods);
+
+        $this->ruleExtension->expects($this->once())
+                            ->method('setApplyToShippingMethods')
+                            ->with([])
+                            ->willReturnSelf();
+
+        $this->entity->expects($this->once())
+                     ->method('setExtensionAttributes')
+                     ->with($this->ruleExtension);
+
+        $result = $this->plugin->afterGetById(
+            $this->subject,
+            $this->entity
+        );
+    }
+
+
 
     public function testAfterGetList()
     {

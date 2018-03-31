@@ -2,6 +2,8 @@
 
 namespace ClawRock\CustomerCoupon\Plugin\Model\Rule\Metadata;
 
+use Magento\SalesRule\Model\Rule\Metadata\ValueProvider;
+
 class ValueProviderPlugin
 {
     const FREE_SHIPPING_METHODS_FIELDSET = 'apply_to_shipping_methods';
@@ -24,7 +26,7 @@ class ValueProviderPlugin
      * @param  array                                               $result
      * @return array
      */
-    public function afterGetMetadataValues(\Magento\SalesRule\Model\Rule\Metadata\ValueProvider $subject, $result)
+    public function afterGetMetadataValues(ValueProvider $subject, $result)
     {
         if (!$this->config->isEnabled()) {
             $result[self::FREE_SHIPPING_METHODS_FIELDSET] = [

@@ -2,6 +2,8 @@
 
 namespace ClawRock\CustomerCoupon\Plugin\Block\SalesRule;
 
+use Magento\SalesRule\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Grid;
+
 class CouponsGridPlugin
 {
     /**
@@ -11,7 +13,7 @@ class CouponsGridPlugin
      * @return \Closure
      */
     public function aroundSetCollection(
-        \Magento\SalesRule\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Grid $subject,
+        Grid $subject,
         \Closure $proceed,
         $collection
     ) {

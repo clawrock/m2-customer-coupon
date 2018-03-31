@@ -2,6 +2,7 @@
 
 namespace ClawRock\CustomerCoupon\Observer;
 
+use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 class RuleSaveAfterObserver implements ObserverInterface
@@ -24,22 +25,24 @@ class RuleSaveAfterObserver implements ObserverInterface
      * @param  \Magento\Framework\Event\Observer $observer
      * @return void
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         $rule = $observer->getRule();
 
         $coupon = $rule->getPrimaryCoupon();
-        if ($coupon->getCode()) {
-            if ($rule->hasCouponCustomerId() && !empty($rule->getCouponCustomerId())) {
-                $customer = $this->couponHelper->getCustomerByEmail(
-                    $rule->getCouponCustomerId(),
-                    $rule->getWebsiteIds()
-                );
-                $couponCustomerId = $customer->getId();
-            } else {
-                $couponCustomerId = null;
-            }
-            $rule->getPrimaryCoupon()->setCouponCustomerId($couponCustomerId)->save();
+        if (!$coupon->getCode()) {
+            return;
         }
+
+        if ($rule->hasCouponCustomerId() && !empty($rule->getCouponCustomerId())) {
+            $customer = $this->couponHelper->getCustomerByEmail(
+                $rule->getCouponCustomerId(),
+                $rule->getWebsiteIds()
+            );
+            $couponCustomerId = $customer->getId();
+        } else {
+            $couponCustomerId = null;
+        }
+        $rule->getPrimaryCoupon()->setCouponCustomerId($couponCustomerId)->save();
     }
 }

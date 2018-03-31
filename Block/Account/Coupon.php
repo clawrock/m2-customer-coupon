@@ -2,8 +2,6 @@
 
 namespace ClawRock\CustomerCoupon\Block\Account;
 
-use \Magento\Framework\App\ObjectManager;
-
 class Coupon extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -64,22 +62,24 @@ class Coupon extends \Magento\Framework\View\Element\Template
         }
         if (!$this->coupons) {
             $this->coupons = $this->couponCollectionFactory->create()
-                                  ->addFieldToSelect(
-                                      ['code', 'usage_limit', 'times_used']
-                                  )->join(
-                                      ['salesrule' => $this->resource->getTableName('salesrule')],
-                                      'main_table.rule_id = salesrule.rule_id',
-                                      ['name', 'description']
-                                  )->addFieldToFilter(
-                                      'coupon_customer_id',
-                                      $customerId
-                                  )->addFieldToFilter(
-                                      'is_active',
-                                      true
-                                  )->setOrder(
-                                      'created_at',
-                                      'desc'
-                                  );
+                ->addFieldToSelect([
+                    'code',
+                    'usage_limit',
+                    'times_used'
+                ])->join(
+                    ['salesrule' => $this->resource->getTableName('salesrule')],
+                    'main_table.rule_id = salesrule.rule_id',
+                    ['name', 'description']
+                )->addFieldToFilter(
+                    'coupon_customer_id',
+                    $customerId
+                )->addFieldToFilter(
+                    'is_active',
+                    true
+                )->setOrder(
+                    'created_at',
+                    'desc'
+                );
         }
         return $this->coupons;
     }

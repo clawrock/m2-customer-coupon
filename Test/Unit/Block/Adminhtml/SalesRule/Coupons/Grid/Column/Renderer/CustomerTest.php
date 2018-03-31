@@ -91,13 +91,13 @@ class CustomerTest extends TestCase
                                ->with('clawrock_customer/coupon/update')
                                ->willReturn($url);
 
-        $expectedHtml =  '<input type="text" name="1" value="'.$val.'"class="input-text test-class"/>';
+        $expectedHtml =  '<input type="text" name="1" value="' . $val . '"class="input-text test-class"/>';
         $expectedHtml .= '<div class="clawrock-customer-coupon"><button class="clawrock-coupon-customer-update-button"';
-        $expectedHtml .= 'onclick=\'updateCoupon('.$val.', "'.$url.'", 0); return false\'>';
-        $expectedHtml .= new Phrase('Update').'</button>';
+        $expectedHtml .= 'onclick=\'updateCoupon(' . $val . ', "' . $url . '", 0); return false\'>';
+        $expectedHtml .= new Phrase('Update') . '</button>';
         $expectedHtml .= '<button class="clawrock-coupon-customer-remove-button"';
-        $expectedHtml .= 'onclick=\'updateCoupon('.$val.', "'.$url.'", 1); return false\'>';
-        $expectedHtml .= new Phrase('Remove').'</button>';
+        $expectedHtml .= 'onclick=\'updateCoupon(' . $val . ', "' . $url . '", 1); return false\'>';
+        $expectedHtml .= new Phrase('Remove') . '</button>';
         $expectedHtml .= '<p class="clawrock-coupon-customer-message"></p></div>';
 
         $this->assertEquals($expectedHtml, $this->block->render($row));
