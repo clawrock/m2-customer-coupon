@@ -94,13 +94,31 @@ class Coupon extends AbstractHelper
     }
 
     /**
+     * @param  string $code
+     * @return \Magento\SalesRule\Model\Coupon
+     * @throws  \Magento\Framework\Exception\LocalizedException
+     */
+    public function loadCouponByCode($code)
+    {
+        $coupon = $this->couponFactory->create()->loadByCode($code);
+        if (!$coupon->getId()) {
+            throw new LocalizedException(new Phrase("Coupon with given coupon doesn't exists."));
+        }
+        return $coupon;
+    }
+
+    /**
      * @param  int $couponId
      * @return \Magento\SalesRule\Model\Coupon
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function loadCoupon($couponId)
     {
-        return $this->loadModel($couponId, $this->couponFactory, "Coupon with given id doesn't exists.");
+        $coupon = $this->couponFactory->create()->load($couponId);
+        if (!$coupon->getId()) {
+            throw new LocalizedException(new Phrase("Coupon with given id doesn't exists."));
+        }
+        return $coupon;
     }
 
     /**
@@ -110,7 +128,11 @@ class Coupon extends AbstractHelper
      */
     public function loadRule($ruleId)
     {
-        return $this->loadModel($ruleId, $this->ruleFactory, "Rule doesn't exists.");
+        $rule = $this->ruleFactory->create()->load($ruleId);
+        if (!$rule->getId()) {
+            throw new LocalizedException(new Phrase("Rule doesn't exists."));
+        }
+        return $rule;
     }
 
 
@@ -121,23 +143,10 @@ class Coupon extends AbstractHelper
      */
     public function getCustomerEmail($customerId)
     {
-        $customer = $this->loadModel($customerId, $this->customerFactory, "Customer doesn't exists.");
-        return $customer->getEmail();
-    }
-
-    /**
-     * @param  mixed $data
-     * @param  mixed $factoryModel
-     * @param  string $message
-     * @return \Magento\Framework\Model\AbstractModel
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    protected function loadModel($data, $factoryModel, $message)
-    {
-        $object = $factoryModel->create()->load($data);
-        if (!$object->getId()) {
-            throw new LocalizedException(new Phrase($message));
+        $customer = $this->customerFactory->create()->load($customerId);
+        if (!$customer->getId()) {
+            throw new LocalizedException(new Phrase("Customer doesn't exists."));
         }
-        return $object;
+        return $customer->getEmail();
     }
 }

@@ -2,10 +2,13 @@
 
 namespace ClawRock\CustomerCoupon\Test\Unit\Observer;
 
+use ClawRock\CustomerCoupon\Helper\Coupon as CouponHelper;
 use ClawRock\CustomerCoupon\Observer\AdminRuleAfterLoadObserver;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
 use Magento\SalesRule\Model\Coupon;
 use Magento\SalesRule\Model\CouponFactory;
 use Magento\SalesRule\Model\Rule;
@@ -43,6 +46,11 @@ class AdminRuleAfterLoadObserverTest extends TestCase
      */
     protected $observer;
 
+    /**
+     * @var \ClawRock\CustomerCoupon\Helper\Coupon
+     */
+    protected $couponHelper;
+
     protected function setUp()
     {
         $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
@@ -57,6 +65,11 @@ class AdminRuleAfterLoadObserverTest extends TestCase
                              ->disableOriginalConstructor()
                              ->getMock();
 
+        $this->couponHelper = $this->getMockBuilder(CouponHelper::class)
+                                   ->setMethods(['loadCouponByCode', 'getCustomerEmail'])
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+
         $this->customerFactory = $this->getMockBuilder(CustomerFactory::class)
                                       ->setMethods(['create'])
                                       ->disableOriginalConstructor()
@@ -69,7 +82,7 @@ class AdminRuleAfterLoadObserverTest extends TestCase
 
         $this->rule = $this->createPartialMock(Rule::class, ['getCouponCode']);
 
-        $this->observer = new AdminRuleAfterLoadObserver($this->couponFactory, $this->customerFactory);
+        $this->observer = new AdminRuleAfterLoadObserver($this->couponHelper);
     }
 
     public function testAddCouponCustomerId()
@@ -78,13 +91,16 @@ class AdminRuleAfterLoadObserverTest extends TestCase
         $customerId = 1;
         $customerEmail = 'test@test.com';
 
-        $this->couponFactory->expects($this->once())->method('create')->willReturn($this->coupon);
+        $this->couponHelper->expects($this->once())
+                           ->method('loadCouponByCode')
+                           ->with($couponCode)
+                           ->willReturn($this->coupon);
+        $this->couponHelper->expects($this->once())
+                           ->method('getCustomerEmail')
+                           ->willReturn($customerEmail);
+
         $this->rule->expects($this->once())->method('getCouponCode')->willReturn($couponCode);
-        $this->coupon->expects($this->once())->method('loadByCode')->with($couponCode)->willReturnSelf();
         $this->coupon->expects($this->once())->method('getCouponCustomerId')->willReturn($customerId);
-        $this->customerFactory->expects($this->once())->method('create')->willReturn($this->customer);
-        $this->customer->expects($this->once())->method('load')->with($customerId)->willReturnSelf();
-        $this->customer->expects($this->once())->method('getEmail')->willReturn($customerEmail);
 
         $eventObserver = new Observer([
             'rule' => $this->rule,
@@ -92,5 +108,31 @@ class AdminRuleAfterLoadObserverTest extends TestCase
 
         $this->observer->execute($eventObserver);
         $this->assertEquals($customerEmail, $this->rule->getCouponCustomerId());
+    }
+
+    public function testAddCouponCustomerIdException()
+    {
+        $couponCode = 'test-coupon';
+        $customerId = 1;
+        $customerEmail = 'test@test.com';
+
+        $this->couponHelper->expects($this->once())
+                           ->method('loadCouponByCode')
+                           ->with($couponCode)
+                           ->willReturn($this->coupon);
+        $this->couponHelper->expects($this->once())
+                           ->method('getCustomerEmail')
+                           ->willThrowException(new LocalizedException(new Phrase("Customer doesn't exists.")));
+
+
+        $this->rule->expects($this->once())->method('getCouponCode')->willReturn($couponCode);
+        $this->coupon->expects($this->once())->method('getCouponCustomerId')->willReturn($customerId);
+
+        $eventObserver = new Observer([
+            'rule' => $this->rule,
+        ]);
+
+        $this->observer->execute($eventObserver);
+        $this->assertEquals('', $this->rule->getCouponCustomerId());
     }
 }

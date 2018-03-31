@@ -19,7 +19,7 @@ class CouponFilter extends Collection
                        ['rule_coupons2.code']
                    );
 
-        $collection->getSelect()->where('rule_coupons2.code LIKE ?', '%'.$value.'%');
+        $collection->getSelect()->where('rule_coupons2.code LIKE ?', '%' . $value . '%');
         $collection->getSelect()->group('main_table.rule_id');
 
         return $this;

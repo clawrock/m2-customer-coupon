@@ -10,6 +10,7 @@ class Grid extends \Magento\SalesRule\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupo
      * Define grid columns
      *
      * @return $this
+     * @throws  \Exception
      */
     protected function _prepareColumns()
     {

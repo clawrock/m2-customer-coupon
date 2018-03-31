@@ -42,11 +42,11 @@ class ShippingMethods implements \Magento\Framework\Option\ArrayInterface
      */
     public function toOptionArray()
     {
-        if (!$this->options) {
+        if ($this->options === null) {
             $rule = $this->registry->registry(\Magento\SalesRule\Model\RegistryConstants::CURRENT_SALES_RULE);
             $this->options = [];
             foreach ($this->shippingConfig->getAllCarriers() as $carrierCode => $carrierModel) {
-                $carrierTitle = $this->scopeConfig->getValue('carriers/'.$carrierCode.'/title');
+                $carrierTitle = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/title');
                 foreach ($carrierModel->getAllowedMethods() as $code => $name) {
                     if ($name) {
                         $this->options[] = [

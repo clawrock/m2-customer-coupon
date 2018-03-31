@@ -21,7 +21,7 @@ class Config extends AbstractHelper
 
     /**
      * @param  null|string $store
-     * @return string]
+     * @return string
      */
     public function getCustomMessage($store = null)
     {

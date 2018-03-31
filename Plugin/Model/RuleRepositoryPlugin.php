@@ -2,8 +2,11 @@
 
 namespace ClawRock\CustomerCoupon\Plugin\Model;
 
+use Magento\Framework\Api\SearchResults;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Phrase;
+use Magento\SalesRule\Api\Data\RuleInterface;
+use Magento\SalesRule\Api\RuleRepositoryInterface;
 
 class RuleRepositoryPlugin
 {
@@ -43,8 +46,8 @@ class RuleRepositoryPlugin
      * @return \Magento\SalesRule\Model\Data\Rule
      */
     public function afterGetById(
-        \Magento\SalesRule\Api\RuleRepositoryInterface $subject,
-        \Magento\SalesRule\Api\Data\RuleInterface $entity
+        RuleRepositoryInterface $subject,
+        RuleInterface $entity
     ) {
         $this->addShippingMethods($entity);
 
@@ -52,8 +55,8 @@ class RuleRepositoryPlugin
     }
 
     public function afterGetList(
-        \Magento\SalesRule\Api\RuleRepositoryInterface $subject,
-        \Magento\Framework\Api\SearchResults $searchResult
+        RuleRepositoryInterface $subject,
+        SearchResults $searchResult
     ) {
         foreach ($searchResult->getItems() as $rule) {
             $this->addShippingMethods($rule);
@@ -69,8 +72,8 @@ class RuleRepositoryPlugin
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function afterSave(
-        \Magento\SalesRule\Api\RuleRepositoryInterface $subject,
-        \Magento\SalesRule\Api\Data\RuleInterface $entity
+        RuleRepositoryInterface $subject,
+        RuleInterface $entity
     ) {
         $extensionAttributes = $entity->getExtensionAttributes();
         if (null !== $extensionAttributes &&
@@ -91,19 +94,24 @@ class RuleRepositoryPlugin
      * @param \Magento\SalesRule\Api\Data\RuleInterface $entity
      * @return this
      */
-    protected function addShippingMethods(\Magento\SalesRule\Api\Data\RuleInterface $entity)
+    protected function addShippingMethods(RuleInterface $entity)
     {
         $extensionAttributes = $entity->getExtensionAttributes();
         if ($extensionAttributes == null) {
             $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->ruleExtensionFactory->create();
         }
 
-        $rule = $this->toModelConverter->toModel($entity);
-        if ($shippingMethods = $rule->getApplyToShippingMethods()) {
-            $shippingMethods = array_filter($shippingMethods);
-            $extensionAttributes->setApplyToShippingMethods($shippingMethods);
-            $entity->setExtensionAttributes($extensionAttributes);
+        try {
+            $rule = $this->toModelConverter->toModel($entity);
+            if ($shippingMethods = $rule->getApplyToShippingMethods()) {
+                $shippingMethods = array_filter($shippingMethods);
+            }
+        } catch (\Exception $e) {
+            $shippingMethods = [];
         }
+
+        $extensionAttributes->setApplyToShippingMethods($shippingMethods);
+        $entity->setExtensionAttributes($extensionAttributes);
 
         return $this;
     }

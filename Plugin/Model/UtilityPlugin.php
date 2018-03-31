@@ -2,6 +2,10 @@
 
 namespace ClawRock\CustomerCoupon\Plugin\Model;
 
+use Magento\Quote\Model\Quote\Address;
+use Magento\SalesRule\Model\Rule;
+use Magento\SalesRule\Model\Utility;
+
 class UtilityPlugin
 {
     /**
@@ -25,10 +29,10 @@ class UtilityPlugin
      * @return \Closure | bool
      */
     public function aroundCanProcessRule(
-        \Magento\SalesRule\Model\Utility $subject,
+        Utility $subject,
         \Closure $proceed,
-        \Magento\SalesRule\Model\Rule $rule,
-        \Magento\Quote\Model\Quote\Address $address
+        Rule $rule,
+        Address $address
     ) {
         if ($rule->getCouponType() != \Magento\SalesRule\Model\Rule::COUPON_TYPE_NO_COUPON) {
             $couponCode = $address->getQuote()->getCouponCode();

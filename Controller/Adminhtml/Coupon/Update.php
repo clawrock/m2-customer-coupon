@@ -4,6 +4,8 @@ namespace ClawRock\CustomerCoupon\Controller\Adminhtml\Coupon;
 
 class Update extends \Magento\Backend\App\Action
 {
+    const ACTION_ROUTE = 'clawrock_customer/coupon/update';
+
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
      */
@@ -41,7 +43,7 @@ class Update extends \Magento\Backend\App\Action
             try {
                 $coupon = $this->couponHelper->loadCoupon($data['couponId']);
                 $rule = $this->couponHelper->loadRule($coupon->getRuleId());
-                if ((bool)$data['remove']) {
+                if ($data['remove']) {
                     $customerId = null;
                     $response['message'] = 'Customer has been removed from coupon.';
                 } else {

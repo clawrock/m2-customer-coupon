@@ -32,7 +32,6 @@ class Coupons extends \Magento\Customer\Controller\AbstractAccount
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(new Phrase('My Coupons'));
         return $resultPage;
     }
 }

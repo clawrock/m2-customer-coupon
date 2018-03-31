@@ -97,4 +97,17 @@ class RuleSaveAfterObserverTest extends TestCase
         $this->observer->execute($eventObserver);
         $this->assertNull($this->coupon->getCouponCustomerId());
     }
+
+    public function testCouponWithoutCode()
+    {
+        $this->rule->expects($this->once())->method('getPrimaryCoupon')->willReturn($this->coupon);
+        $this->coupon->expects($this->once())->method('getCode')->willReturn(null);
+
+        $eventObserver = new Observer([
+            'rule' => $this->rule,
+        ]);
+
+        $this->observer->execute($eventObserver);
+        $this->assertNull($this->coupon->getCouponCustomerId());
+    }
 }

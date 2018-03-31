@@ -145,7 +145,7 @@ class CouponTest extends TestCase
         );
     }
 
-    public function testModelException()
+    public function testLoadCouponWillThrowException()
     {
         $couponId = 1;
 
@@ -244,5 +244,95 @@ class CouponTest extends TestCase
         $this->expectException(LocalizedException::class);
         $this->preapreResourceConnection();
         $this->helper->prepareCustomerIdByEmail($email, [1,2], false);
+    }
+
+    public function testLoadCouponByCode()
+    {
+        $couponCode = 'test';
+        $couponId = 1;
+
+        $this->couponFactory->expects($this->once())
+                            ->method('create')
+                            ->willReturn($this->coupon);
+
+        $this->coupon->expects($this->once())
+                     ->method('loadByCode')
+                     ->with($couponCode)
+                     ->willReturnSelf();
+
+        $this->coupon->expects($this->once())
+                     ->method('getId')
+                     ->willReturn($couponId);
+
+        $this->assertInstanceOf(
+            Coupon::class,
+            $this->helper->loadCouponByCode($couponCode)
+        );
+    }
+
+    public function testLoadCouponByCodeWillThrowException()
+    {
+        $couponCode = 'test';
+        $couponId = null;
+
+        $this->expectException(LocalizedException::class);
+
+        $this->couponFactory->expects($this->once())
+                            ->method('create')
+                            ->willReturn($this->coupon);
+
+        $this->coupon->expects($this->once())
+                     ->method('loadByCode')
+                     ->with($couponCode)
+                     ->willReturnSelf();
+
+        $this->coupon->expects($this->once())
+                     ->method('getId')
+                     ->willReturn($couponId);
+
+        $this->helper->loadCouponByCode($couponCode);
+    }
+
+    public function testGetCustomerEmailWillThrowException()
+    {
+        $customerId = 1;
+        $customerEmail = 'test@example.com';
+
+        $this->customerFactory->expects($this->once())
+                            ->method('create')
+                            ->willReturn($this->customer);
+
+        $this->customer->expects($this->once())
+                       ->method('load')
+                       ->with($customerId)
+                       ->willReturnSelf();
+
+        $this->customer->expects($this->once())
+                       ->method('getId')
+                       ->willReturn(null);
+
+        $this->expectException(LocalizedException::class);
+        $this->helper->getCustomerEmail($customerId);
+    }
+
+    public function testLoadRuleWillThrowException()
+    {
+        $ruleId = 1;
+
+        $this->ruleFactory->expects($this->once())
+                            ->method('create')
+                            ->willReturn($this->rule);
+
+        $this->rule->expects($this->once())
+                       ->method('load')
+                       ->with($ruleId)
+                       ->willReturnSelf();
+
+        $this->rule->expects($this->once())
+                       ->method('getId')
+                       ->willReturn(null);
+
+        $this->expectException(LocalizedException::class);
+        $this->helper->loadRule($ruleId);
     }
 }

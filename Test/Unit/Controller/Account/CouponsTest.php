@@ -87,6 +87,5 @@ class CouponsTest extends TestCase
         $this->resultPage->expects($this->any())->method('getConfig')->willReturn($this->config);
 
         $this->assertSame($this->resultPage, $this->controller->execute());
-        $this->assertEquals('My Coupons', $this->title->get());
     }
 }
