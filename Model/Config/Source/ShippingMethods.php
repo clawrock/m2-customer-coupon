@@ -58,12 +58,14 @@ class ShippingMethods implements \Magento\Framework\Option\ArrayInterface
             }
 
             $methodCodes = array_column($this->options, 'value');
-            foreach ($rule->getApplyToShippingMethods() as $shippingMethod) {
-                if (!in_array($shippingMethod, $methodCodes)) {
-                    $this->options[] = [
-                        'value' => $shippingMethod,
-                        'label' => $shippingMethod.' - currently not allowable'
-                    ];
+            if ($rule->getApplyToShippingMethods() !== null) {
+                foreach ($rule->getApplyToShippingMethods() as $shippingMethod) {
+                    if (!in_array($shippingMethod, $methodCodes)) {
+                        $this->options[] = [
+                            'value' => $shippingMethod,
+                            'label' => $shippingMethod.' - currently not allowable'
+                        ];
+                    }
                 }
             }
         }
