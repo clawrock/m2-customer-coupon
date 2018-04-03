@@ -86,7 +86,7 @@ class ShippingMethodsTest extends TestCase
             'flatrate_flatrate'
         ];
 
-        $rule->expects($this->once())
+        $rule->expects($this->exactly(2))
              ->method('getApplyToShippingMethods')
              ->willReturn($disabledCarrier);
 
